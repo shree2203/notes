@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  frontend:
+    build:
+      context: D:/keepnotes-frontend/keepnotes-frontend
+    container_name: keepnotes-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: "http://host.docker.internal:8000/api"
+    volumes:
+      - D:/keepnotes-frontend/keepnotes-frontend:/app
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: D:/keepnotes/keepnotes
+    container_name: keepnotes-backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - D:/keepnotes/keepnotes:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: keepnotes
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8
+    container_name: keepnotes-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "keepnotes"
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:

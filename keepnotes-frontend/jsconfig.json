@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./keepnotes-frontend/*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}
